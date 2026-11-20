@@ -187,8 +187,8 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
   <div class="groups">
     <div class="group"><h3>Copias y almacenamiento</h3><div class="tags"><span class="tag">ZFS</span><span class="tag">Proxmox Backup Server</span><span class="tag">restic → Google Drive</span><span class="tag">Samba</span><span class="tag">NFS</span></div></div>
     <div class="group"><h3>Seguridad</h3><div class="tags"><span class="tag">Wazuh</span><span class="tag">CrowdSec</span><span class="tag">Fail2ban</span><span class="tag">Vaultwarden</span><span class="tag">Tailscale</span><span class="tag">AdGuard Home</span></div></div>
-    <div class="group"><h3>Monitorización</h3><div class="tags"><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Uptime Kuma</span><span class="tag">Scrutiny (SMART)</span><span class="tag">ntfy</span><span class="tag">Dozzle</span></div></div>
-    <div class="group"><h3>Red y acceso</h3><div class="tags"><span class="tag">Caddy (proxy HTTPS)</span><span class="tag">DNS local</span><span class="tag">Guacamole</span><span class="tag">Homarr</span><span class="tag">Portainer</span></div></div>
+    <div class="group"><h3>Monitorización</h3><div class="tags"><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Uptime Kuma</span><span class="tag">Scrutiny (SMART)</span><span class="tag">ntfy</span><span class="tag">changedetection.io</span></div></div>
+    <div class="group"><h3>Red y acceso</h3><div class="tags"><span class="tag">Caddy (proxy HTTPS)</span><span class="tag">DNS local</span><span class="tag">Guacamole</span><span class="tag">Homarr</span><span class="tag">Docker Compose</span></div></div>
     <div class="group"><h3>Aplicaciones</h3><div class="tags"><span class="tag">Immich</span><span class="tag">Paperless-ngx</span><span class="tag">Forgejo</span><span class="tag">n8n</span><span class="tag">Home Assistant</span><span class="tag">Stirling PDF</span><span class="tag">SearXNG</span></div></div>
     <div class="group"><h3>Multimedia e IA</h3><div class="tags"><span class="tag">Jellyfin</span><span class="tag">Sonarr · Radarr · Bazarr</span><span class="tag">Navidrome</span><span class="tag">Kavita</span><span class="tag">Ollama</span><span class="tag">whisper.cpp</span><span class="tag">Open WebUI</span></div></div>
   </div>
@@ -281,7 +281,7 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
     <h2 id="h-bit">Cómo ha ido creciendo</h2>
   </div>
   <ol id="bitacora" reversed>
-    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones con rollback, informe mensual de capacidad, subtítulos y transcripción con Whisper en la GPU.</p></li>
+    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones con rollback, informe mensual de capacidad, subtítulos y transcripción con Whisper en la GPU. Limpieza de paneles que no se usaban (todo pasa a Docker Compose gestionado por API), vigilancia de webs con aviso al móvil y un navegador sin pantalla para que el agente lea webs por su cuenta.</p></li>
     <li><time datetime="2026-11-19">19 nov 2026</time><p>Las tareas programadas pasan al propio servidor (no dependen del PC). Copia cifrada fuera de casa con restic.</p></li>
     <li><time datetime="2026-11-18">18 nov 2026</time><p>Jellyfin migrado al segundo nodo con transcodificación por GPU. CrowdSec en los hosts. Laboratorio de ciberseguridad con OPNsense, Kali, Metasploitable y un controlador de dominio.</p></li>
     <li><time datetime="2026-11-17">17 nov 2026</time><p>Proxy HTTPS con dominio interno para todos los servicios, Proxmox Backup Server y una veintena de aplicaciones nuevas.</p></li>
