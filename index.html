@@ -124,7 +124,7 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
   <span class="eyebrow">Portfolio · Administración de sistemas y redes</span>
   <h1>Un centro de datos pequeño, montado y mantenido en casa</h1>
   <p class="lead">Soy Horacio, estudiante de 2.º de SMR (Sistemas Microinformáticos y Redes) en Cartagena. Desde noviembre de 2026 administro un clúster Proxmox de dos nodos con almacenamiento ZFS, copias verificadas, monitorización, seguridad y un laboratorio de ciberseguridad aislado. Esta página es su hoja técnica y su bitácora: crece a medida que el laboratorio avanza.</p>
-  <div class="who"><span>Horacio</span><span>2.º SMR · Cartagena</span><span id="actualizado">Actualizado el 20/11/2026</span></div>
+  <div class="who"><span>Horacio</span><span>2.º SMR · Cartagena</span><span id="actualizado">Actualizado el 22/11/2026</span></div>
   <div class="facts" aria-label="Cifras del laboratorio">
     <div class="fact"><b>2</b><span>nodos Proxmox VE 9 en clúster</span></div>
     <div class="fact"><b>10</b><span>contenedores LXC en producción</span></div>
@@ -171,7 +171,7 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
       </dl>
       <ul class="cts">
         <li><span class="id">CT 102</span>Jellyfin con transcodificación por GPU (VAAPI)</li>
-        <li><span class="id">CT 106</span>IA local en GPU: Ollama y Whisper (voz a texto)</li>
+        <li><span class="id">CT 106</span>IA local en GPU: Ollama, Whisper (voz a texto) y generación de imágenes</li>
         <li><span class="id">CT 108</span>Proxmox Backup Server: copias diarias deduplicadas</li>
       </ul>
       <p class="net">Red: LAN de casa, DNS interno con dominio <span class="mono">home.arpa</span> y certificados HTTPS propios. Acceso desde fuera solo por VPN (Tailscale), sin puertos abiertos en el router. El laboratorio va en un puente aislado detrás de su propio cortafuegos.</p>
@@ -190,7 +190,7 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
     <div class="group"><h3>Monitorización</h3><div class="tags"><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Uptime Kuma</span><span class="tag">Scrutiny (SMART)</span><span class="tag">ntfy</span><span class="tag">changedetection.io</span></div></div>
     <div class="group"><h3>Red y acceso</h3><div class="tags"><span class="tag">Caddy (proxy HTTPS)</span><span class="tag">DNS local</span><span class="tag">Guacamole</span><span class="tag">Homarr</span><span class="tag">Docker Compose</span></div></div>
     <div class="group"><h3>Aplicaciones</h3><div class="tags"><span class="tag">Immich</span><span class="tag">Paperless-ngx</span><span class="tag">Forgejo</span><span class="tag">n8n</span><span class="tag">Home Assistant</span><span class="tag">Stirling PDF</span><span class="tag">SearXNG</span></div></div>
-    <div class="group"><h3>Multimedia e IA</h3><div class="tags"><span class="tag">Jellyfin</span><span class="tag">Sonarr · Radarr · Bazarr</span><span class="tag">Navidrome</span><span class="tag">Kavita</span><span class="tag">Ollama</span><span class="tag">whisper.cpp</span><span class="tag">Open WebUI</span></div></div>
+    <div class="group"><h3>Multimedia e IA</h3><div class="tags"><span class="tag">Jellyfin</span><span class="tag">Sonarr · Radarr · Bazarr</span><span class="tag">Navidrome</span><span class="tag">Kavita</span><span class="tag">Ollama</span><span class="tag">whisper.cpp</span><span class="tag">stable-diffusion.cpp</span><span class="tag">Open WebUI</span></div></div>
   </div>
 </section>
 
@@ -201,6 +201,12 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
     <p>En un laboratorio que se usa a diario las cosas se rompen de verdad. Esto es lo que pasó, cómo se diagnosticó y qué cambió para que no se repita.</p>
   </div>
   <div class="cases">
+    <article class="case">
+      <h3>El nodo de la GPU escribía 53 MB/s sin parar</h3>
+      <div><span class="k">Síntoma</span><p>El NVMe del segundo nodo con escritura constante, la IA local sin responder y una compilación muerta por falta de memoria.</p></div>
+      <div><span class="k">Diagnóstico</span><p>El modelo de lenguaje cargado ocupaba casi los 6 GB del contenedor: el sistema intercambiaba swap a 50-200 MB/s (presión de memoria del 18 %).</p></div>
+      <div><span class="k fix">Solución</span><p>RAM del contenedor de 6 a 9 GB: presión al 0,3 %, swap parado y escrituras a 0,8 MB/s. Compilaciones con menos hilos en paralelo.</p></div>
+    </article>
     <article class="case">
       <h3>Un disco externo de 2 TB muere con datos dentro</h3>
       <div><span class="k">Síntoma</span><p>El disco USB dejó de responder y su copia semanal empezó a fallar.</p></div>
@@ -281,7 +287,9 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
     <h2 id="h-bit">Cómo ha ido creciendo</h2>
   </div>
   <ol id="bitacora" reversed>
-    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones con rollback, informe mensual de capacidad, subtítulos y transcripción con Whisper en la GPU. Limpieza de paneles que no se usaban (todo pasa a Docker Compose gestionado por API), vigilancia de webs con aviso al móvil y un navegador sin pantalla para que el agente lea webs por su cuenta.</p></li>
+    <li><time datetime="2026-11-22">22 nov 2026</time><p>Generador de imágenes local en la GPU (stable-diffusion.cpp con Vulkan y SDXL Turbo, compilado a mano para Debian 13): una imagen en 10-17 s, compartiendo la tarjeta con el modelo de lenguaje.</p></li>
+    <li><time datetime="2026-11-21">21 nov 2026</time><p>Diagnóstico de un contenedor de IA que vivía en swap y desgastaba el NVMe; RAM ajustada en dos contenedores. Actualización de los dos nodos con una red muy lenta, descargando los paquetes una vez y pasándolos al otro nodo.</p></li>
+    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones con rollback, informe mensual de capacidad, subtítulos y transcripción con Whisper en la GPU. Limpieza de paneles que no se usaban (todo pasa a Docker Compose gestionado por API), vigilancia de webs con aviso al móvil y un navegador sin pantalla para que el agente lea webs por su cuenta. Encargos al agente desde el móvil y parte diario automático.</p></li>
     <li><time datetime="2026-11-19">19 nov 2026</time><p>Las tareas programadas pasan al propio servidor (no dependen del PC). Copia cifrada fuera de casa con restic.</p></li>
     <li><time datetime="2026-11-18">18 nov 2026</time><p>Jellyfin migrado al segundo nodo con transcodificación por GPU. CrowdSec en los hosts. Laboratorio de ciberseguridad con OPNsense, Kali, Metasploitable y un controlador de dominio.</p></li>
     <li><time datetime="2026-11-17">17 nov 2026</time><p>Proxy HTTPS con dominio interno para todos los servicios, Proxmox Backup Server y una veintena de aplicaciones nuevas.</p></li>
