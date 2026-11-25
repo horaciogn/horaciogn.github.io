@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-0ae9dl8jpZOonLkvtei43r5koc/mXkvABfTyQvJpD0s=' 'sha256-oCRlzLpnhih2iM80zlwuGv+jEsT+tEHrgOWM0AI6F0I='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-ig+1gmc/DW5uLE3WaVkKSK84ZT9YGBvCDULewA/B4C8=' 'sha256-oCRlzLpnhih2iM80zlwuGv+jEsT+tEHrgOWM0AI6F0I='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Portfolio de Horacio, técnico de sistemas y redes en formación (2.º SMR): servidores, copias de seguridad, ciberseguridad y automatización en un laboratorio propio.">
@@ -72,9 +72,18 @@ a:focus-visible{outline:3px solid var(--accent-strong);outline-offset:3px;border
 .fact b{font:800 2.3rem/1 var(--display);letter-spacing:-.03em;color:var(--accent);font-variant-numeric:tabular-nums}
 .fact span{color:var(--muted);font-size:.95rem;line-height:1.35}
 
+/* Barra de secciones (fija arriba al bajar) */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-top:32px}
+.nav .in{display:flex;gap:8px;overflow-x:auto;padding-block:12px;scrollbar-width:none}
+.nav .in::-webkit-scrollbar{display:none}
+.nav a{flex:none;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font:600 .92rem/1 var(--body);text-decoration:none;color:var(--ink);transition:border-color .15s ease,color .15s ease,background .15s ease}
+.nav a:hover{border-color:var(--accent-strong);color:var(--accent);background:var(--accent-soft)}
+.nav a.top{background:var(--accent-strong);border-color:var(--accent-strong);color:#16100b}
+
 /* Secciones */
-main{display:grid;gap:88px;padding-block:72px 80px}
-section{display:grid;gap:28px}
+main{display:grid;gap:88px;padding-block:56px 80px}
+section{display:grid;gap:28px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 80px)}
 .sec-head{display:grid;gap:10px}
 .sec-head p{color:var(--muted);font-size:1.05rem}
 
@@ -142,7 +151,7 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .led{animation:none}
-  .btn{transition:none}
+  .btn,.nav a{transition:none}
   .btn:hover{transform:none}
 }
 </style>
@@ -151,7 +160,7 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
 <body>
 <div class="wrap">
 
-<header class="hero">
+<header class="hero" id="inicio">
   <div class="in">
     <div class="hero-text">
       <span class="eyebrow">Portfolio · Técnico de sistemas y redes</span>
@@ -185,6 +194,17 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
     <div class="fact"><b>4</b><span>equipos de prácticas de ciberseguridad, aislados</span></div>
   </div>
 </div>
+
+<nav class="nav" aria-label="Secciones">
+  <div class="in">
+    <a class="top" href="#inicio">Inicio</a>
+    <a href="#aporto">Qué puedo aportar</a>
+    <a href="#casos">Problemas resueltos</a>
+    <a href="#montaje">Cómo está montado</a>
+    <a href="#automatico">Lo que funciona solo</a>
+    <a href="#historia">Cómo ha crecido</a>
+  </div>
+</nav>
 
 <main class="in">
 
@@ -256,7 +276,7 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
   </div>
 </section>
 
-<section aria-labelledby="h-arq">
+<section id="montaje" aria-labelledby="h-arq">
   <div class="sec-head">
     <span class="eyebrow">Para el equipo técnico</span>
     <h2 id="h-arq">Cómo está montado</h2>
@@ -303,7 +323,7 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
   </div>
 </section>
 
-<section aria-labelledby="h-auto">
+<section id="automatico" aria-labelledby="h-auto">
   <div class="sec-head">
     <span class="eyebrow">Automatización</span>
     <h2 id="h-auto">Lo que funciona solo</h2>
@@ -321,7 +341,7 @@ footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:fl
   </div>
 </section>
 
-<section aria-labelledby="h-bit">
+<section id="historia" aria-labelledby="h-bit">
   <div class="sec-head">
     <span class="eyebrow">Bitácora</span>
     <h2 id="h-bit">Cómo ha ido creciendo</h2>
