@@ -2,117 +2,155 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-oW1Coz/UChkGafWlzcDc9IlxZdpMklJZ3RHkiT7aTY4=' 'sha256-oCRlzLpnhih2iM80zlwuGv+jEsT+tEHrgOWM0AI6F0I='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Portfolio técnico de Horacio (2.º SMR, Cartagena): clúster Proxmox, ZFS, copias, seguridad y automatización en un home lab.">
+<meta name="description" content="Portfolio de Horacio, técnico de sistemas y redes en formación (2.º SMR, Cartagena): servidores, copias de seguridad, ciberseguridad y automatización en un laboratorio propio.">
+<meta name="color-scheme" content="light dark">
 <meta property="og:title" content="Home Lab de Horacio">
-<meta property="og:description" content="Portfolio técnico de Horacio (2.º SMR, Cartagena): clúster Proxmox, ZFS, copias, seguridad y automatización en un home lab.">
+<meta property="og:description" content="Portfolio de Horacio, técnico de sistemas y redes en formación (2.º SMR, Cartagena): servidores, copias de seguridad, ciberseguridad y automatización en un laboratorio propio.">
 <meta property="og:type" content="website">
 <title>Home Lab de Horacio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,600;112,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  PORTFOLIO DEL HOME LAB · fuente de verdad: Cerebro/02 Proyectos/Home Lab.md
-  Se actualiza: cada vez que hay un hito (sesiones de Claude) y cada domingo (tarea puesta-al-dia-semanal).
-  Reglas: nada de IPs, puertos, nombres de Tailscale, claves, contraseñas ni datos personales
-  (gastos, salud, correo). Solo el nombre "Horacio".
-  Para añadir un hito: un <li> nuevo ARRIBA en #bitacora y cambiar la fecha de #actualizado.
--->
 <style>
-/* Layout: hoja de especificaciones de equipo — una columna de lectura, fichas técnicas en rejilla, bitácora como registro */
+/* Layout: banda oscura de cabecera con un rack dibujado en CSS; debajo, bandas claras de lectura (aportación, casos, montaje, automatización, bitácora) en una columna de 1100 px */
 :root{
-  --bg:#f3f5f6; --panel:#ffffff; --ink:#14212b; --muted:#566874; --line:#d5dde2;
-  --accent:#0b6e79; --accent-soft:#dcefF1; --warn:#b4570b; --ok:#2f7d4f;
-  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --bg:#f4f6f9; --panel:#ffffff; --ink:#0f1b2d; --muted:#53627a; --line:#dbe2ea;
+  --accent:#c2410c; --accent-strong:#e8590c; --accent-soft:#fff0e6; --ok:#2b8a3e; --ok-soft:#e5f4e9;
+  --hero-bg:#0f1b2d; --hero-ink:#f2f6fb; --hero-muted:#aab8cb; --rack:#16243a; --unit:#1c2d46; --unit-line:#2b4060; --led:#4ade80; --led-warn:#fb923c;
+  --display:"Segoe UI Variable Display","SF Pro Display","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --body:"Segoe UI Variable Text","SF Pro Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0f171d; --panel:#16222a; --ink:#e3ecf0; --muted:#97a9b4; --line:#2a3943;
-  --accent:#5cc4cf; --accent-soft:#173840; --warn:#f0a35e; --ok:#74c995; color-scheme:dark}}
+  --bg:#0c131e; --panel:#142033; --ink:#e6edf5; --muted:#98a7bb; --line:#243349;
+  --accent:#ff9a52; --accent-strong:#ff8a3d; --accent-soft:#2c1f15; --ok:#6fcf8a; --ok-soft:#14301f;
+  --hero-bg:#070e18; --hero-ink:#f2f6fb; --hero-muted:#aab8cb; --rack:#101b2c; --unit:#17253a; --unit-line:#263a56; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0f171d; --panel:#16222a; --ink:#e3ecf0; --muted:#97a9b4; --line:#2a3943;
-  --accent:#5cc4cf; --accent-soft:#173840; --warn:#f0a35e; --ok:#74c995; color-scheme:dark}
+  --bg:#0c131e; --panel:#142033; --ink:#e6edf5; --muted:#98a7bb; --line:#243349;
+  --accent:#ff9a52; --accent-strong:#ff8a3d; --accent-soft:#2c1f15; --ok:#6fcf8a; --ok-soft:#14301f;
+  --hero-bg:#070e18; --hero-ink:#f2f6fb; --hero-muted:#aab8cb; --rack:#101b2c; --unit:#17253a; --unit-line:#263a56; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:1040px;margin:0 auto;padding-block:40px 64px;display:grid;gap:56px}
-h1,h2,h3{font-family:var(--display);font-stretch:112%;text-wrap:balance;margin:0;line-height:1.1}
-h1{font-size:clamp(1.75rem,6.5vw,3.6rem);overflow-wrap:break-word;font-weight:800;letter-spacing:-.01em}
-h2{font-size:1.65rem;font-weight:800}
-h3{font-size:1.05rem;font-weight:600}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body)}
+.in{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.12}
+h2{font-size:clamp(1.55rem,3.4vw,2.1rem);font-weight:750;letter-spacing:-.015em}
+h3{font-size:1.08rem;font-weight:650}
 p{margin:0;max-width:66ch}
-.eyebrow{font:600 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--accent-strong);outline-offset:3px;border-radius:4px}
+.eyebrow{font:600 .75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .mono{font-family:var(--mono);font-size:.86em}
-section{display:grid;gap:20px}
-.sec-head{display:grid;gap:8px}
-.sec-head p{color:var(--muted)}
 
 /* Cabecera */
-header{display:grid;gap:18px;padding-bottom:28px;border-bottom:2px solid var(--ink)}
-.who{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font:400 .9rem/1.4 var(--mono)}
-.lead{font-size:1.18rem;max-width:62ch}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
-.fact{background:var(--panel);padding:14px 16px;display:grid;gap:2px}
-.fact b{font:800 1.7rem/1.1 var(--display);font-stretch:112%;font-variant-numeric:tabular-nums}
-.fact span{color:var(--muted);font-size:.86rem;line-height:1.3}
+.hero{background:var(--hero-bg);color:var(--hero-ink);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 3.5rem);padding-bottom:6.5rem}
+.hero .in{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.85fr);gap:48px;align-items:center}
+.hero-text{display:grid;gap:22px;min-width:0}
+.hero .eyebrow{color:var(--accent-strong)}
+.hero h1{font-size:clamp(2.05rem,5.2vw,3.5rem);font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--accent-strong)}
+.lead{font-size:1.16rem;color:var(--hero-muted);max-width:58ch}
+.lead b{color:var(--hero-ink);font-weight:600}
+.who{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font:500 .86rem/1 var(--body)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--unit-line);color:var(--hero-muted)}
+.pill.on{color:var(--hero-ink);border-color:var(--led)}
+.pill.on::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--led);box-shadow:0 0 8px var(--led)}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;padding:12px 20px;border-radius:10px;font:600 1rem/1 var(--body);text-decoration:none;transition:transform .15s ease,background .15s ease}
+.btn.main{background:var(--accent-strong);color:#16100b}
+.btn.alt{border:1px solid var(--unit-line);color:var(--hero-ink)}
+.btn:hover{transform:translateY(-2px)}
 
-/* Nodos */
-.nodes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px}
-.node{background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--ink);padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
-.node header{border:0;padding:0;gap:4px}
-.spec{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:.92rem;margin:0}
-.spec dt{font:600 .74rem/1.9 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.spec dd{margin:0}
-.cts{display:grid;gap:6px;list-style:none;margin:0;padding:0}
-.cts li{display:grid;grid-template-columns:3.6em 1fr;gap:10px;align-items:baseline;padding:7px 10px;background:var(--bg);border-left:3px solid var(--accent);font-size:.92rem}
-.cts .id{font:600 .8rem/1 var(--mono);color:var(--accent)}
-.cts .lab{border-left-color:var(--warn)}
-.cts .lab .id{color:var(--warn)}
-.net{font-size:.9rem;color:var(--muted)}
+/* Rack */
+.rack{background:var(--rack);border:1px solid var(--unit-line);border-radius:14px;padding:14px;display:grid;gap:8px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);min-width:0}
+.rack-top{display:flex;justify-content:space-between;font:600 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--hero-muted);padding:2px 4px 6px}
+.u{display:flex;align-items:center;gap:12px;background:var(--unit);border:1px solid var(--unit-line);border-radius:6px;padding:10px 12px;font:500 .82rem/1.2 var(--mono);color:var(--hero-ink);min-width:0}
+.u span{flex:none}
+.u i{flex:1;height:10px;min-width:12px;background:repeating-linear-gradient(90deg,var(--unit-line) 0 3px,transparent 3px 7px);border-radius:2px}
+.led{width:9px;height:9px;border-radius:50%;background:var(--led);box-shadow:0 0 8px var(--led);animation:blink 2.6s ease-in-out infinite}
+.u:nth-child(3) .led{animation-delay:.4s}.u:nth-child(4) .led{animation-delay:1.1s}.u:nth-child(5) .led{animation-delay:.7s}.u:nth-child(6) .led{animation-delay:1.6s}.u:nth-child(7) .led{animation-delay:.2s}
+.led.warn{background:var(--led-warn);box-shadow:0 0 8px var(--led-warn)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
-/* Servicios */
-.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:20px 28px}
-.group{display:grid;gap:8px;align-content:start;border-top:1px solid var(--line);padding-top:12px}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font:400 .8rem/1 var(--mono);padding:6px 8px;border:1px solid var(--line);background:var(--panel)}
+/* Cifras */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin-top:-4rem;position:relative}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:grid;gap:6px;box-shadow:0 18px 40px -28px rgba(15,27,45,.45)}
+.fact b{font:800 2.3rem/1 var(--display);letter-spacing:-.03em;color:var(--accent);font-variant-numeric:tabular-nums}
+.fact span{color:var(--muted);font-size:.95rem;line-height:1.35}
+
+/* Secciones */
+main{display:grid;gap:88px;padding-block:72px 80px}
+section{display:grid;gap:28px}
+.sec-head{display:grid;gap:10px}
+.sec-head p{color:var(--muted);font-size:1.05rem}
+
+/* Qué aporto */
+.offer{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(310px,100%),1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.card .n{font:700 .8rem/1 var(--mono);color:var(--accent);background:var(--accent-soft);justify-self:start;padding:6px 9px;border-radius:6px}
+.card p{color:var(--muted);font-size:.98rem}
+.card .tools{font:400 .78rem/1.5 var(--mono);color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
 
 /* Casos */
-.cases{display:grid;gap:14px}
-.case{background:var(--panel);border:1px solid var(--line);padding:18px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px 24px}
-.case h3{grid-column:1/-1}
-.case div{display:grid;gap:4px;min-width:0}
-.case .k{font:600 .7rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.cases{display:grid;gap:16px}
+.case{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:14px 28px}
+.case h3{grid-column:1/-1;font-size:1.2rem}
+.case div{display:grid;gap:6px;align-content:start;min-width:0}
+.case .k{font:600 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .case .k.fix{color:var(--ok)}
-.case p{font-size:.95rem}
+.case p{font-size:.97rem}
+.case .fix + p{color:var(--ink)}
+.case div:last-child{background:var(--ok-soft);border-radius:10px;padding:12px 14px}
+
+/* Montaje */
+.nodes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:18px}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;gap:16px;align-content:start;min-width:0}
+.node-head{display:grid;gap:6px}
+.spec{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:.95rem;margin:0}
+.spec dt{font:600 .72rem/1.9 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.spec dd{margin:0}
+.cts{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.cts li{padding:9px 12px;background:var(--bg);border-radius:8px;font-size:.95rem}
+.cts li b{font-weight:600}
+.net{font-size:.97rem;color:var(--muted);max-width:none}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font:400 .8rem/1 var(--mono);padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
 
 /* Automatización */
-.autos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
-.auto{background:var(--panel);padding:16px 18px;display:grid;gap:6px;align-content:start}
-.auto .when{font:400 .78rem/1.3 var(--mono);color:var(--accent)}
-.auto p{font-size:.95rem}
-
-/* Competencias */
-.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px 28px;list-style:none;margin:0;padding:0}
-.skills li{display:grid;gap:2px;padding-block:10px;border-bottom:1px dashed var(--line)}
-.skills b{font-weight:600}
-.skills span{color:var(--muted);font-size:.92rem}
+.autos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(245px,100%),1fr));gap:14px}
+.auto{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:8px;align-content:start}
+.auto .when{font:600 .74rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.auto p{font-size:.95rem;color:var(--muted)}
 
 /* Bitácora */
-#bitacora{list-style:none;margin:0;padding:0;display:grid;gap:0;border-left:2px solid var(--line)}
-#bitacora li{display:grid;grid-template-columns:7.5em 1fr;gap:16px;padding:10px 0 10px 18px;position:relative}
-#bitacora li::before{content:"";position:absolute;left:-6px;top:17px;width:10px;height:10px;background:var(--bg);border:2px solid var(--accent)}
-#bitacora time{font:600 .82rem/1.6 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
-#bitacora p{font-size:.97rem}
+#bitacora{list-style:none;margin:0;padding:0;display:grid;border-left:2px solid var(--line)}
+#bitacora li{display:grid;grid-template-columns:7.5em 1fr;gap:18px;padding:12px 0 12px 22px;position:relative}
+#bitacora li::before{content:"";position:absolute;left:-7px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+#bitacora li:first-child::before{background:var(--accent)}
+#bitacora time{font:600 .84rem/1.7 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+#bitacora p{font-size:.98rem}
 
-footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between}
+footer{border-top:1px solid var(--line)}
+footer .in{padding-block:22px 34px;color:var(--muted);font-size:.9rem;display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between}
 
+@media (max-width:880px){
+  .hero .in{grid-template-columns:minmax(0,1fr);gap:36px}
+  .hero{padding-top:calc(env(safe-area-inset-top,0px) + 2.5rem)}
+}
 @media (max-width:520px){
   body{font-size:16px}
+  main{gap:64px;padding-block:56px 64px}
   #bitacora li{grid-template-columns:1fr;gap:2px}
   .spec{grid-template-columns:1fr;gap:0}
-  .spec dd{margin-bottom:6px}
+  .spec dd{margin-bottom:8px}
+  .u i{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .led{animation:none}
+  .btn{transition:none}
+  .btn:hover{transform:none}
 }
 </style>
 <style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}</style>
@@ -120,189 +158,204 @@ footer{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font
 <body>
 <div class="wrap">
 
-<header>
-  <span class="eyebrow">Portfolio · Administración de sistemas y redes</span>
-  <h1>Un centro de datos pequeño, montado y mantenido en casa</h1>
-  <p class="lead">Soy Horacio, estudiante de 2.º de SMR (Sistemas Microinformáticos y Redes) en Cartagena. Desde noviembre de 2026 administro un clúster Proxmox de dos nodos con almacenamiento ZFS, copias verificadas, monitorización, seguridad y un laboratorio de ciberseguridad aislado. Esta página es su hoja técnica y su bitácora: crece a medida que el laboratorio avanza.</p>
-  <div class="who"><span>Horacio</span><span>2.º SMR · Cartagena</span><span id="actualizado">Actualizado el 22/11/2026</span></div>
-  <div class="facts" aria-label="Cifras del laboratorio">
-    <div class="fact"><b>2</b><span>nodos Proxmox VE 9 en clúster</span></div>
-    <div class="fact"><b>10</b><span>contenedores LXC en producción</span></div>
-    <div class="fact"><b>4</b><span>VMs de laboratorio en red aislada</span></div>
-    <div class="fact"><b>40+</b><span>servicios web, 46 monitorizados</span></div>
-    <div class="fact"><b>48 GB</b><span>de RAM y 20 hilos de CPU</span></div>
-    <div class="fact"><b>3</b><span>capas de copia: PBS, Drive cifrado y snapshots</span></div>
+<header class="hero">
+  <div class="in">
+    <div class="hero-text">
+      <span class="eyebrow">Portfolio · Técnico de sistemas y redes</span>
+      <h1>Mantengo en marcha un pequeño <em>centro de datos</em>. En casa, cada día.</h1>
+      <p class="lead">Soy <b>Horacio</b>, estudiante de 2.º de SMR (Sistemas Microinformáticos y Redes) en Cartagena. Desde noviembre de 2026 monto y cuido mis propios servidores: <b>copias de seguridad, protección frente a ataques, avisos automáticos y resolución de averías</b>. Es el trabajo diario del departamento de informática de una empresa, a escala pequeña, y aquí está documentado.</p>
+      <div class="who">
+        <span class="pill on">Busco empresa para las prácticas (FFE)</span>
+        <span class="pill">Cartagena</span>
+        <span class="pill" id="actualizado">Actualizado el 25/11/2026</span>
+      </div>
+      <div class="cta">
+        <a class="btn main" href="#aporto">Qué puedo aportar</a>
+        <a class="btn alt" href="#casos">Problemas que he resuelto</a>
+      </div>
+    </div>
+    <div class="rack" role="img" aria-label="Esquema del armario de servidores: copias, seguridad, vigilancia, aplicaciones, inteligencia artificial y laboratorio, todos en marcha">
+      <div class="rack-top"><span>Home Lab</span><span>en marcha</span></div>
+      <div class="u"><span class="led"></span><span>Copias de seguridad</span><i></i></div>
+      <div class="u"><span class="led"></span><span>Seguridad 24 h</span><i></i></div>
+      <div class="u"><span class="led"></span><span>Vigilancia y avisos</span><i></i></div>
+      <div class="u"><span class="led"></span><span>Aplicaciones</span><i></i></div>
+      <div class="u"><span class="led"></span><span>IA en local</span><i></i></div>
+      <div class="u"><span class="led warn"></span><span>Laboratorio aislado</span><i></i></div>
+    </div>
   </div>
 </header>
 
+<div class="in">
+  <div class="facts" aria-label="El laboratorio en cifras">
+    <div class="fact"><b>2</b><span>servidores físicos que trabajan juntos</span></div>
+    <div class="fact"><b>40+</b><span>servicios en marcha, 46 vigilados día y noche</span></div>
+    <div class="fact"><b>3</b><span>copias de seguridad independientes de los datos</span></div>
+    <div class="fact"><b>4</b><span>equipos de prácticas de ciberseguridad, aislados</span></div>
+  </div>
+</div>
+
+<main class="in">
+
+<section id="aporto" aria-labelledby="h-aporto">
+  <div class="sec-head">
+    <span class="eyebrow">Para tu empresa</span>
+    <h2 id="h-aporto">Qué puedo aportar desde el primer día</h2>
+    <p>Lo que hago a diario en mi laboratorio, explicado sin tecnicismos. Debajo de cada punto, las herramientas que uso.</p>
+  </div>
+  <div class="offer">
+    <article class="card"><span class="n">Datos</span><h3>Que no se pierda nada</h3><p>Copias de seguridad automáticas en tres sitios distintos, y cada mes compruebo que de verdad se pueden recuperar.</p><span class="tools">Proxmox Backup Server · restic · ZFS</span></article>
+    <article class="card"><span class="n">Avisos</span><h3>Ver los problemas antes que los usuarios</h3><p>Vigilo 46 servicios y el estado de los discos. Si algo falla o un disco empieza a estropearse, me llega un aviso al móvil.</p><span class="tools">Prometheus · Grafana · Uptime Kuma · SMART</span></article>
+    <article class="card"><span class="n">Seguridad</span><h3>Proteger los equipos</h3><p>Detección de intrusiones, bloqueo automático de ataques, contraseñas en un gestor propio y acceso desde fuera solo por VPN.</p><span class="tools">Wazuh · CrowdSec · Fail2ban · VPN</span></article>
+    <article class="card"><span class="n">Servidores</span><h3>Montar y mantener servidores</h3><p>Muchos sistemas en dos máquinas físicas, cada servicio separado para que un fallo no arrastre a los demás.</p><span class="tools">Proxmox VE · contenedores LXC · máquinas virtuales · Docker</span></article>
+    <article class="card"><span class="n">Redes</span><h3>Redes ordenadas y cifradas</h3><p>DNS propio, conexiones cifradas en todos los servicios y una red de pruebas separada con su propio cortafuegos.</p><span class="tools">DNS · HTTPS · OPNsense · Samba y NFS · Windows Server y Active Directory</span></article>
+    <article class="card"><span class="n">Tiempo</span><h3>Automatizar lo repetitivo</h3><p>Actualizaciones que se deshacen solas si algo falla, informes mensuales y un asistente de IA (Claude) con permisos limitados que arregla fallos sencillos.</p><span class="tools">Bash · Python · systemd · agentes de IA</span></article>
+  </div>
+</section>
+
+<section id="casos" aria-labelledby="h-casos">
+  <div class="sec-head">
+    <span class="eyebrow">Experiencia real</span>
+    <h2 id="h-casos">Problemas que he resuelto</h2>
+    <p>Un sistema que se usa a diario se rompe de verdad. Esto es lo que pasó, cómo encontré la causa y qué cambié para que no se repita.</p>
+  </div>
+  <div class="cases">
+    <article class="case">
+      <h3>Un disco de 2 TB se estropea con datos dentro</h3>
+      <div><span class="k">Qué pasaba</span><p>El disco dejó de responder y su copia semanal empezó a fallar.</p></div>
+      <div><span class="k">Por qué</span><p>Los datos de salud del disco (SMART) mostraban errores en aumento. Era la única copia de parte de los datos.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Rescaté lo que se podía leer, pasé los datos a un conjunto de discos que aguanta la rotura de uno y rehíce las copias en tres sitios.</p></div>
+    </article>
+    <article class="case">
+      <h3>Toda la red de casa iba lenta</h3>
+      <div><span class="k">Qué pasaba</span><p>Cada conexión al router tardaba 70-80 ms, desde los dos servidores.</p></div>
+      <div><span class="k">Por qué</span><p>Medí con las descargas en pausa y no era el servidor: el router se saturaba con miles de conexiones abiertas a la vez.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Limité las conexiones del programa de descargas de 1.000 a 400. La red volvió a ir bien.</p></div>
+    </article>
+    <article class="case">
+      <h3>Un servidor gastaba su disco escribiendo sin parar</h3>
+      <div><span class="k">Qué pasaba</span><p>El disco escribía 53 MB/s sin descanso y la IA local no respondía.</p></div>
+      <div><span class="k">Por qué</span><p>El modelo de IA llenaba casi toda la memoria asignada y el sistema usaba el disco como memoria de reserva (swap).</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Le di más memoria (de 6 a 9 GB). Las escrituras bajaron a 0,8 MB/s, 66 veces menos, y el disco dura más.</p></div>
+    </article>
+    <article class="case">
+      <h3>Un servicio se caía por falta de memoria</h3>
+      <div><span class="k">Qué pasaba</span><p>El sistema cerraba a la fuerza la aplicación web de IA.</p></div>
+      <div><span class="k">Por qué</span><p>Al cargar datos, la aplicación pasaba de su límite de 4 GB.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Subí el límite a 6 GB y creé una revisión mensual automática que compara lo que usa cada servicio con lo que tiene.</p></div>
+    </article>
+    <article class="case">
+      <h3>El procesador iba a menos de la mitad de su velocidad</h3>
+      <div><span class="k">Qué pasaba</span><p>Las tareas pesadas iban lentas: la CPU no pasaba de 1,6 GHz aunque llega a 3,9 GHz.</p></div>
+      <div><span class="k">Por qué</span><p>El modo de ahorro (<span class="mono">powersave</span>) la dejaba fija en la velocidad mínima.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Cambié a un modo que baja en reposo y sube cuando hay trabajo (<span class="mono">schedutil</span>; en el servidor AMD, <span class="mono">amd-pstate-epp</span>).</p></div>
+    </article>
+    <article class="case">
+      <h3>No se podía guardar una «foto» de algunos servicios</h3>
+      <div><span class="k">Qué pasaba</span><p>El sistema no dejaba hacer instantáneas de los servicios que usan carpetas compartidas.</p></div>
+      <div><span class="k">Por qué</span><p>Ese tipo de carpeta compartida no admite instantáneas, y bloqueaba la función para todo el servicio.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Hago la instantánea directamente sobre el disco del servicio. Puedo volver atrás en segundos sin tocar los datos compartidos.</p></div>
+    </article>
+    <article class="case">
+      <h3>Dos programas que no se entendían</h3>
+      <div><span class="k">Qué pasaba</span><p>El programa de subtítulos no podía usar el reconocimiento de voz instalado en la tarjeta gráfica.</p></div>
+      <div><span class="k">Por qué</span><p>Cada uno esperaba el audio en un formato y una dirección distintos.</p></div>
+      <div><span class="k fix">Cómo lo arreglé</span><p>Escribí un pequeño traductor en Python que conecta los dos. Ahora se crean subtítulos sin instalar nada más.</p></div>
+    </article>
+  </div>
+</section>
+
 <section aria-labelledby="h-arq">
   <div class="sec-head">
-    <span class="eyebrow">01 · Arquitectura</span>
-    <h2 id="h-arq">Dos nodos, un clúster</h2>
-    <p>Cada servicio vive en su propio contenedor, con su RAM y su disco. Así uno que falla no arrastra a los demás, y cada uno se copia y se restaura por separado.</p>
+    <span class="eyebrow">Para el equipo técnico</span>
+    <h2 id="h-arq">Cómo está montado</h2>
+    <p>Dos servidores en clúster. Cada servicio vive en su propio contenedor, con su memoria y su disco, y se copia y se restaura por separado.</p>
   </div>
   <div class="nodes">
     <article class="node">
-      <header><span class="eyebrow">Nodo 1 · pve1</span><h3>Almacenamiento y servicios</h3></header>
+      <div class="node-head"><span class="eyebrow">Servidor 1</span><h3>Almacenamiento y servicios</h3></div>
       <dl class="spec">
         <dt>CPU</dt><dd>Intel Core i7-3770 (4 núcleos / 8 hilos)</dd>
         <dt>RAM</dt><dd>32 GB</dd>
-        <dt>Sistema</dt><dd><span class="mono">rpool</span>: ZFS mirror, 2 × SSD 240 GB</dd>
-        <dt>Datos</dt><dd><span class="mono">Boveda</span>: ZFS raidz1, 3 × HDD 500 GB</dd>
+        <dt>Sistema</dt><dd>ZFS en espejo, 2 × SSD 240 GB</dd>
+        <dt>Datos</dt><dd>ZFS raidz1, 3 × HDD 500 GB</dd>
       </dl>
       <ul class="cts">
-        <li><span class="id">CT 100</span>DNS propio con bloqueo de anuncios (AdGuard Home)</li>
-        <li><span class="id">CT 101</span>NAS por Samba sobre el pool <span class="mono">Boveda</span></li>
-        <li><span class="id">CT 103</span>Descargas y biblioteca multimedia automatizada</li>
-        <li><span class="id">CT 104</span>Proxy HTTPS, monitorización, contraseñas, Git, acceso remoto</li>
-        <li><span class="id">CT 105</span>Wazuh: SIEM y detección de intrusiones</li>
-        <li><span class="id">CT 107</span>Apps: fotos, documentos con OCR, métricas, finanzas, domótica</li>
-        <li><span class="id">CT 109</span>Agente de automatización (tareas programadas con IA)</li>
-        <li class="lab"><span class="id">VM ×4</span>Laboratorio: OPNsense, Kali, Metasploitable y Windows Server con Active Directory</li>
+        <li><b>DNS propio</b> con bloqueo de anuncios</li>
+        <li><b>NAS</b>: carpetas compartidas por Samba</li>
+        <li><b>Biblioteca multimedia</b> automatizada</li>
+        <li><b>Proxy HTTPS</b>, monitorización, gestor de contraseñas y Git</li>
+        <li><b>Wazuh</b>: detección de intrusiones (SIEM)</li>
+        <li><b>Aplicaciones</b>: fotos, documentos con OCR, métricas y domótica</li>
+        <li><b>Agente de automatización</b> con IA</li>
+        <li><b>Laboratorio de ciberseguridad</b>: OPNsense, Kali, Metasploitable y Windows Server con Active Directory</li>
       </ul>
     </article>
     <article class="node">
-      <header><span class="eyebrow">Nodo 2 · pve2</span><h3>GPU, multimedia y copias</h3></header>
+      <div class="node-head"><span class="eyebrow">Servidor 2</span><h3>Tarjeta gráfica, multimedia y copias</h3></div>
       <dl class="spec">
         <dt>CPU</dt><dd>AMD Ryzen 5 5500 (6 núcleos / 12 hilos)</dd>
         <dt>RAM</dt><dd>16 GB</dd>
         <dt>Disco</dt><dd>NVMe 1 TB, LVM-thin</dd>
-        <dt>GPU</dt><dd>AMD Radeon RX 6600 8 GB, compartida con los contenedores</dd>
+        <dt>GPU</dt><dd>AMD Radeon RX 6600 8 GB, compartida entre contenedores</dd>
       </dl>
       <ul class="cts">
-        <li><span class="id">CT 102</span>Jellyfin con transcodificación por GPU (VAAPI)</li>
-        <li><span class="id">CT 106</span>IA local en GPU: Ollama, Whisper (voz a texto) y generación de imágenes</li>
-        <li><span class="id">CT 108</span>Proxmox Backup Server: copias diarias deduplicadas</li>
+        <li><b>Jellyfin</b> con conversión de vídeo por GPU</li>
+        <li><b>IA local</b>: modelos de lenguaje, voz a texto y generación de imágenes</li>
+        <li><b>Proxmox Backup Server</b>: copias diarias sin duplicados</li>
       </ul>
-      <p class="net">Red: LAN de casa, DNS interno con dominio <span class="mono">home.arpa</span> y certificados HTTPS propios. Acceso desde fuera solo por VPN (Tailscale), sin puertos abiertos en el router. El laboratorio va en un puente aislado detrás de su propio cortafuegos.</p>
+      <p class="net">Red: acceso desde fuera solo por VPN, sin puertos abiertos en el router. El laboratorio va en una red aislada detrás de su propio cortafuegos.</p>
     </article>
   </div>
-</section>
-
-<section aria-labelledby="h-serv">
-  <div class="sec-head">
-    <span class="eyebrow">02 · Servicios</span>
-    <h2 id="h-serv">Lo que corre en el laboratorio</h2>
-  </div>
-  <div class="groups">
-    <div class="group"><h3>Copias y almacenamiento</h3><div class="tags"><span class="tag">ZFS</span><span class="tag">Proxmox Backup Server</span><span class="tag">restic → Google Drive</span><span class="tag">Samba</span><span class="tag">NFS</span></div></div>
-    <div class="group"><h3>Seguridad</h3><div class="tags"><span class="tag">Wazuh</span><span class="tag">CrowdSec</span><span class="tag">Fail2ban</span><span class="tag">Vaultwarden</span><span class="tag">Tailscale</span><span class="tag">AdGuard Home</span></div></div>
-    <div class="group"><h3>Monitorización</h3><div class="tags"><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Uptime Kuma</span><span class="tag">Scrutiny (SMART)</span><span class="tag">ntfy</span><span class="tag">changedetection.io</span></div></div>
-    <div class="group"><h3>Red y acceso</h3><div class="tags"><span class="tag">Caddy (proxy HTTPS)</span><span class="tag">DNS local</span><span class="tag">Guacamole</span><span class="tag">Homarr</span><span class="tag">Docker Compose</span></div></div>
-    <div class="group"><h3>Aplicaciones</h3><div class="tags"><span class="tag">Immich</span><span class="tag">Paperless-ngx</span><span class="tag">Forgejo</span><span class="tag">n8n</span><span class="tag">Home Assistant</span><span class="tag">Stirling PDF</span><span class="tag">SearXNG</span></div></div>
-    <div class="group"><h3>Multimedia e IA</h3><div class="tags"><span class="tag">Jellyfin</span><span class="tag">Sonarr · Radarr · Bazarr</span><span class="tag">Navidrome</span><span class="tag">Kavita</span><span class="tag">Ollama</span><span class="tag">whisper.cpp</span><span class="tag">stable-diffusion.cpp</span><span class="tag">Open WebUI</span></div></div>
-  </div>
-</section>
-
-<section aria-labelledby="h-casos">
-  <div class="sec-head">
-    <span class="eyebrow">03 · Problemas resueltos</span>
-    <h2 id="h-casos">Averías reales y cómo se arreglaron</h2>
-    <p>En un laboratorio que se usa a diario las cosas se rompen de verdad. Esto es lo que pasó, cómo se diagnosticó y qué cambió para que no se repita.</p>
-  </div>
-  <div class="cases">
-    <article class="case">
-      <h3>El nodo de la GPU escribía 53 MB/s sin parar</h3>
-      <div><span class="k">Síntoma</span><p>El NVMe del segundo nodo con escritura constante, la IA local sin responder y una compilación muerta por falta de memoria.</p></div>
-      <div><span class="k">Diagnóstico</span><p>El modelo de lenguaje cargado ocupaba casi los 6 GB del contenedor: el sistema intercambiaba swap a 50-200 MB/s (presión de memoria del 18 %).</p></div>
-      <div><span class="k fix">Solución</span><p>RAM del contenedor de 6 a 9 GB: presión al 0,3 %, swap parado y escrituras a 0,8 MB/s. Compilaciones con menos hilos en paralelo.</p></div>
-    </article>
-    <article class="case">
-      <h3>Un disco externo de 2 TB muere con datos dentro</h3>
-      <div><span class="k">Síntoma</span><p>El disco USB dejó de responder y su copia semanal empezó a fallar.</p></div>
-      <div><span class="k">Diagnóstico</span><p>SMART con errores en aumento; el disco no se recuperaba. Era la única copia de parte de los datos.</p></div>
-      <div><span class="k fix">Solución</span><p>Rescate de lo legible, datos movidos a un pool raidz1 con redundancia y copias rehechas en tres capas: PBS en el otro nodo, Google Drive cifrado y snapshots ZFS.</p></div>
-    </article>
-    <article class="case">
-      <h3>Toda la red de casa va lenta</h3>
-      <div><span class="k">Síntoma</span><p>Latencias de 70-80 ms hasta el router desde los dos nodos.</p></div>
-      <div><span class="k">Diagnóstico</span><p>Medido con las descargas en pausa: no era el servidor. La tabla NAT del router se saturaba con las miles de conexiones del cliente de torrents.</p></div>
-      <div><span class="k fix">Solución</span><p>Límite de conexiones globales y por torrent, de 1.000 a 400.</p></div>
-    </article>
-    <article class="case">
-      <h3>Un contenedor se queda sin memoria</h3>
-      <div><span class="k">Síntoma</span><p>El kernel mató la interfaz web de IA (OOM) en el contenedor de servicios.</p></div>
-      <div><span class="k">Diagnóstico</span><p>Picos de RAM por encima del límite de 4 GB al cargar datos.</p></div>
-      <div><span class="k fix">Solución</span><p>Límite subido a 6 GB y revisión mensual automática del pico de RAM de cada contenedor frente a su límite.</p></div>
-    </article>
-    <article class="case">
-      <h3>La CPU no pasaba de 1,6 GHz</h3>
-      <div><span class="k">Síntoma</span><p>Tareas pesadas lentas aunque el procesador llega a 3,9 GHz.</p></div>
-      <div><span class="k">Diagnóstico</span><p>Con el driver <span class="mono">intel_cpufreq</span>, el governor <span class="mono">powersave</span> fija la frecuencia mínima en vez de ahorrar de forma dinámica.</p></div>
-      <div><span class="k fix">Solución</span><p>Governor <span class="mono">schedutil</span>: baja en reposo y sube con carga. En el nodo AMD, <span class="mono">amd-pstate-epp</span> en modo equilibrado.</p></div>
-    </article>
-    <article class="case">
-      <h3>Snapshots imposibles en contenedores con datos montados</h3>
-      <div><span class="k">Síntoma</span><p>Proxmox rechaza el snapshot de los contenedores que montan carpetas del NAS.</p></div>
-      <div><span class="k">Diagnóstico</span><p>Los montajes de tipo bind no admiten snapshots, así que el contenedor entero queda sin esa función.</p></div>
-      <div><span class="k fix">Solución</span><p>Snapshot ZFS directo sobre el disco del contenedor. Permite volver atrás con <span class="mono">zfs rollback</span> sin tocar los datos del NAS.</p></div>
-    </article>
-    <article class="case">
-      <h3>Dos programas que no hablaban el mismo idioma</h3>
-      <div><span class="k">Síntoma</span><p>Bazarr solo sabe pedir subtítulos a la API de whisper-asr-webservice, pero en la GPU corre whisper.cpp.</p></div>
-      <div><span class="k">Diagnóstico</span><p>Bazarr manda audio PCM en bruto y whisper.cpp espera un fichero WAV en otra ruta.</p></div>
-      <div><span class="k fix">Solución</span><p>Un adaptador propio en Python, sin dependencias, que traduce una API a la otra. Así se generan subtítulos sin instalar otro modelo.</p></div>
-    </article>
+  <div class="tags" aria-label="Herramientas">
+    <span class="tag">Proxmox VE</span><span class="tag">ZFS</span><span class="tag">Debian</span><span class="tag">Docker Compose</span><span class="tag">Caddy</span><span class="tag">AdGuard Home</span><span class="tag">Wazuh</span><span class="tag">CrowdSec</span><span class="tag">Fail2ban</span><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Uptime Kuma</span><span class="tag">ntfy</span><span class="tag">restic</span><span class="tag">Immich</span><span class="tag">Paperless-ngx</span><span class="tag">Forgejo</span><span class="tag">n8n</span><span class="tag">Home Assistant</span><span class="tag">Jellyfin</span><span class="tag">Ollama</span><span class="tag">whisper.cpp</span><span class="tag">OPNsense</span><span class="tag">Active Directory</span>
   </div>
 </section>
 
 <section aria-labelledby="h-auto">
   <div class="sec-head">
-    <span class="eyebrow">04 · Automatización</span>
-    <h2 id="h-auto">Lo que el laboratorio hace solo</h2>
-    <p>Cada tarea avisa al móvil (ntfy) y deja registro, y las que cambian algo tienen manera de deshacerlo.</p>
+    <span class="eyebrow">Automatización</span>
+    <h2 id="h-auto">Lo que funciona solo</h2>
+    <p>Cada tarea avisa al móvil y deja registro. Las que cambian algo se pueden deshacer.</p>
   </div>
   <div class="autos">
-    <div class="auto"><span class="when">cada 5 min</span><h3>Autorreparación</h3><p>Si un servicio lleva 15 minutos caído, un agente lo diagnostica (logs, memoria, disco), aplica solo arreglos seguros, lo comprueba y avisa.</p></div>
-    <div class="auto"><span class="when">sábados 05:00</span><h3>Actualizaciones con vuelta atrás</h3><p>Snapshot ZFS y actualización de las imágenes Docker. Si algo que funcionaba deja de responder, rollback automático.</p></div>
-    <div class="auto"><span class="when">diario 01:30</span><h3>Copias a PBS</h3><p>Todos los contenedores al servidor de copias del otro nodo, con retención diaria, semanal y mensual.</p></div>
-    <div class="auto"><span class="when">1.er domingo del mes</span><h3>Prueba de restauración</h3><p>Restaura una copia real en un contenedor temporal sin red, comprueba que arranca y lo borra.</p></div>
-    <div class="auto"><span class="when">cada 5 min</span><h3>Salud del hardware</h3><p>SMART, estado de los pools ZFS y contenedores parados, con aviso si algo empeora.</p></div>
-    <div class="auto"><span class="when">día 1 del mes</span><h3>Informe de capacidad</h3><p>Espacio, ritmo de crecimiento y fecha estimada de llenado, RAM por contenedor y estado de los discos.</p></div>
-    <div class="auto"><span class="when">cada 2 min</span><h3>Transcripción de audios</h3><p>Lo que se deja en una carpeta del NAS se pasa a texto en la GPU con Whisper.</p></div>
-    <div class="auto"><span class="when">a diario 04:00</span><h3>Copia fuera de casa</h3><p>Lo importante, cifrado con restic y subido a Google Drive.</p></div>
+    <div class="auto"><span class="when">Cada pocos minutos</span><h3>Autorreparación</h3><p>Si un servicio lleva un rato caído, un asistente busca la causa, aplica solo arreglos seguros, lo comprueba y avisa.</p></div>
+    <div class="auto"><span class="when">Cada pocos minutos</span><h3>Salud del hardware</h3><p>Estado de discos y servicios, con aviso en cuanto algo empeora.</p></div>
+    <div class="auto"><span class="when">Cada noche</span><h3>Copias de seguridad</h3><p>Todos los servicios se copian al otro servidor y se guardan copias diarias, semanales y mensuales.</p></div>
+    <div class="auto"><span class="when">Cada noche</span><h3>Copia fuera de casa</h3><p>Lo importante, cifrado y guardado en la nube.</p></div>
+    <div class="auto"><span class="when">Cada semana</span><h3>Actualizaciones seguras</h3><p>Antes de actualizar se guarda una instantánea. Si algo deja de funcionar, se vuelve atrás solo.</p></div>
+    <div class="auto"><span class="when">Cada mes</span><h3>Prueba de recuperación</h3><p>Recupera una copia real en un equipo de pruebas, comprueba que arranca y lo borra.</p></div>
+    <div class="auto"><span class="when">Cada mes</span><h3>Informe de capacidad</h3><p>Espacio libre, ritmo de crecimiento, fecha estimada de llenado y estado de los discos.</p></div>
+    <div class="auto"><span class="when">Al momento</span><h3>Audio a texto</h3><p>Los audios que se dejan en una carpeta se pasan a texto con IA en la tarjeta gráfica.</p></div>
   </div>
-</section>
-
-<section aria-labelledby="h-comp">
-  <div class="sec-head">
-    <span class="eyebrow">05 · Competencias</span>
-    <h2 id="h-comp">Qué demuestra este laboratorio</h2>
-  </div>
-  <ul class="skills">
-    <li><b>Virtualización</b><span>Proxmox VE en clúster, LXC y KVM, quórum, paso de GPU a contenedores</span></li>
-    <li><b>Almacenamiento</b><span>ZFS (mirror, raidz1, snapshots, scrub), LVM-thin, diagnóstico SMART</span></li>
-    <li><b>Copias y recuperación</b><span>Proxmox Backup Server, restic, retención, pruebas de restauración</span></li>
-    <li><b>Redes</b><span>DNS, proxy inverso con HTTPS, VPN, segmentación, NAT, Samba y NFS</span></li>
-    <li><b>Seguridad</b><span>SIEM (Wazuh), IPS colaborativo (CrowdSec), bastionado SSH, laboratorio ofensivo y defensivo</span></li>
-    <li><b>Sistemas</b><span>Debian, systemd, cron, Docker y Compose, Windows Server y Active Directory</span></li>
-    <li><b>Monitorización</b><span>Prometheus, Grafana, Uptime Kuma, alertas al móvil</span></li>
-    <li><b>Automatización</b><span>Bash, Python, temporizadores de systemd y agentes de IA (Claude) con permisos acotados</span></li>
-  </ul>
 </section>
 
 <section aria-labelledby="h-bit">
   <div class="sec-head">
-    <span class="eyebrow">06 · Bitácora</span>
+    <span class="eyebrow">Bitácora</span>
     <h2 id="h-bit">Cómo ha ido creciendo</h2>
   </div>
   <ol id="bitacora" reversed>
-    <li><time datetime="2026-11-22">22 nov 2026</time><p>Generador de imágenes local en la GPU (stable-diffusion.cpp con Vulkan y SDXL Turbo, compilado a mano para Debian 13): una imagen en 10-17 s, compartiendo la tarjeta con el modelo de lenguaje.</p></li>
-    <li><time datetime="2026-11-21">21 nov 2026</time><p>Diagnóstico de un contenedor de IA que vivía en swap y desgastaba el NVMe; RAM ajustada en dos contenedores. Actualización de los dos nodos con una red muy lenta, descargando los paquetes una vez y pasándolos al otro nodo.</p></li>
-    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones con rollback, informe mensual de capacidad, subtítulos y transcripción con Whisper en la GPU. Limpieza de paneles que no se usaban (todo pasa a Docker Compose gestionado por API), vigilancia de webs con aviso al móvil y un navegador sin pantalla para que el agente lea webs por su cuenta. Encargos al agente desde el móvil y parte diario automático.</p></li>
-    <li><time datetime="2026-11-19">19 nov 2026</time><p>Las tareas programadas pasan al propio servidor (no dependen del PC). Copia cifrada fuera de casa con restic.</p></li>
-    <li><time datetime="2026-11-18">18 nov 2026</time><p>Jellyfin migrado al segundo nodo con transcodificación por GPU. CrowdSec en los hosts. Laboratorio de ciberseguridad con OPNsense, Kali, Metasploitable y un controlador de dominio.</p></li>
-    <li><time datetime="2026-11-17">17 nov 2026</time><p>Proxy HTTPS con dominio interno para todos los servicios, Proxmox Backup Server y una veintena de aplicaciones nuevas.</p></li>
-    <li><time datetime="2026-11-15">15 nov 2026</time><p>Segundo nodo (Ryzen 5 con RX 6600) y clúster Proxmox. IA local con GPU.</p></li>
-    <li><time datetime="2026-11-06">6 nov 2026</time><p>Muere el disco externo de 2 TB: rescate de datos y rediseño de las copias.</p></li>
-    <li><time datetime="2026-11-05">5 nov 2026</time><p>Monitorización con Uptime Kuma y alertas al móvil, y un script de salud de discos y ZFS.</p></li>
-    <li><time datetime="2026-11-03">3 nov 2026</time><p>Primer nodo en marcha: Proxmox VE con ZFS en mirror y raidz1, NAS y primeros contenedores.</p></li>
+    <li><time datetime="2026-11-22">22 nov 2026</time><p>Generador de imágenes con IA en mi propia tarjeta gráfica, sin servicios de pago: una imagen en 10-17 segundos, compartiendo la tarjeta con el modelo de lenguaje.</p></li>
+    <li><time datetime="2026-11-21">21 nov 2026</time><p>Encontré un servicio de IA que desgastaba el disco por falta de memoria y ajusté la memoria de dos servicios. Actualicé los dos servidores con una conexión muy lenta descargando cada paquete una sola vez.</p></li>
+    <li><time datetime="2026-11-20">20 nov 2026</time><p>Autorreparación de servicios, actualizaciones que se deshacen si fallan, informe mensual de capacidad y subtítulos automáticos con IA. Quité paneles que no se usaban y añadí avisos al móvil cuando cambia una web vigilada.</p></li>
+    <li><time datetime="2026-11-19">19 nov 2026</time><p>Las tareas programadas pasan al propio servidor, sin depender del ordenador. Copia cifrada fuera de casa.</p></li>
+    <li><time datetime="2026-11-18">18 nov 2026</time><p>Servidor multimedia movido al segundo servidor, con la tarjeta gráfica. Bloqueo automático de ataques. Laboratorio de ciberseguridad con cortafuegos, equipo atacante, equipo vulnerable y un dominio de Windows.</p></li>
+    <li><time datetime="2026-11-17">17 nov 2026</time><p>Conexiones cifradas (HTTPS) para todos los servicios, servidor de copias de seguridad y una veintena de aplicaciones nuevas.</p></li>
+    <li><time datetime="2026-11-15">15 nov 2026</time><p>Segundo servidor con tarjeta gráfica y los dos unidos en clúster. Primera IA en local.</p></li>
+    <li><time datetime="2026-11-06">6 nov 2026</time><p>Se estropea el disco externo de 2 TB: rescate de datos y nuevo diseño de las copias.</p></li>
+    <li><time datetime="2026-11-05">5 nov 2026</time><p>Vigilancia de servicios con avisos al móvil y un control automático de la salud de los discos.</p></li>
+    <li><time datetime="2026-11-03">3 nov 2026</time><p>Primer servidor en marcha: Proxmox con discos en espejo, carpetas compartidas y los primeros servicios.</p></li>
   </ol>
 </section>
 
+</main>
+
 <footer>
-  <span>Home Lab de Horacio · 2.º SMR</span>
-  <span>Sin datos de red ni credenciales: la configuración interna no se publica.</span>
+  <div class="in">
+    <span>Home Lab de Horacio · 2.º SMR · Cartagena</span>
+    <span>Esta página no publica datos de red, contraseñas ni datos personales.</span>
+  </div>
 </footer>
 
 </div>
